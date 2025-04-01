@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Document - AI Classifier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">AI Document Classifier</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="index.html" class="hover:text-blue-200">Home</a></li>
+                    <li><a href="upload.html" class="hover:text-blue-200">Upload Document</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto flex-grow p-6 flex items-center justify-center">
+        <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-md">
+            <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">Upload Your Document</h2>
+
+            <form id="uploadForm" class="space-y-4" enctype="multipart/form-data">
+                <div>
+                    <label for="documentFile" class="block text-gray-700 mb-2">
+                        Select Document to Classify
+                    </label>
+                    <input type="file" id="documentFile" name="document" accept=".pdf,.docx,.txt"
+                        class="w-full p-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+                </div>
+
+                <button type="submit"
+                    class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+                    Classify Document
+                </button>
+            </form>
+
+            <div id="loadingSpinner" class="hidden text-center mt-4">
+                <div class="spinner-border text-blue-600" role="status">
+                    Processing...
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <p>&copy; Namith Fotedar, CCE, 23FE10CCE00007</p>
+    </footer>
+
+    <script>
+        document.getElementById('uploadForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('documentFile');
+            const loadingSpinner = document.getElementById('loadingSpinner');
+
+            if (!fileInput.files.length) {
+                alert('Please select a document to upload');
+                return;
+            }
+
+            const formData = new FormData();
+            formData.append('document', fileInput.files[0]);
+
+            try {
+                loadingSpinner.classList.remove('hidden');
+
+                const response = await fetch('/classify', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                if (!response.ok) {
+                    throw new Error('Classification failed');
+                }
+
+                const result = await response.json();
+
+                // Store result in localStorage to pass to results page
+                localStorage.setItem('classificationResult', JSON.stringify(result));
+
+                // Redirect to results page
+                window.location.href = 'result.html';
+            } catch (error) {
+                console.error('Error:', error);
+                alert('An error occurred during classification');
+            } finally {
+                loadingSpinner.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Classification Results - AI Classifier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">AI Document Classifier</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="index.html" class="hover:text-blue-200">Home</a></li>
+                    <li><a href="upload.html" class="hover:text-blue-200">Upload Document</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto flex-grow p-6 flex items-center justify-center">
+        <div class="bg-white shadow-md rounded-lg p-8 w-full max-w-4xl">
+            <h2 class="text-2xl font-bold mb-6 text-center text-blue-600">Classification Results</h2>
+
+            <div id="resultContainer" class="space-y-6">
+                <div id="categoryResult" class="text-center">
+                    <h3 class="text-xl font-semibold">Predicted Category: <span id="predictedCategory"></span></h3>
+                    <p class="text-gray-600">Confidence: <span id="confidence"></span>%</p>
+                </div>
+
+                <canvas id="probabilityChart" class="w-full h-64"></canvas>
+
+                <div class="mt-4">
+                    <h4 class="text-lg font-semibold mb-2">Document Text Preview</h4>
+                    <div id="textPreview" class="bg-gray-100 p-4 rounded-md max-h-48 overflow-y-auto text-sm">
+                        <p id="extractedText" class="whitespace-pre-wrap break-words"></p>
+                    </div>
+                </div>
+
+                <div class="text-center mt-4">
+                    <a href="upload.html" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        Classify Another Document
+                    </a>
+                </div>
+            </div>
+
+            <div id="errorContainer" class="hidden text-center text-red-600">
+                <p>Unable to process the classification result.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <p>&copy; 2024 AI Document Classifier. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const resultData = JSON.parse(localStorage.getItem('classificationResult'));
+
+                if (!resultData) {
+                    throw new Error('No classification result found');
+                }
+
+                // Display predicted category and confidence
+                document.getElementById('predictedCategory').textContent = resultData.category;
+                document.getElementById('confidence').textContent = (resultData.confidence * 100).toFixed(2);
+
+                // Display extracted text preview
+                document.getElementById('extractedText').textContent = resultData.extracted_text || 'No text could be extracted.';
+
+                // Create probability chart
+                const ctx = document.getElementById('probabilityChart').getContext('2d');
+                new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: Object.keys(resultData.probabilities),
+                        datasets: [{
+                            label: 'Classification Probabilities',
+                            data: Object.values(resultData.probabilities).map(p => p * 100),
+                            backgroundColor: [
+                                'rgba(54, 162, 235, 0.6)',
+                                'rgba(255, 99, 132, 0.6)',
+                                'rgba(75, 192, 192, 0.6)',
+                                'rgba(255, 206, 86, 0.6)',
+                                'rgba(153, 102, 255, 0.6)'
+                            ]
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                title: {
+                                    display: true,
+                                    text: 'Probability (%)'
+                                }
+                            }
+                        }
+                    }
+                });
+
+                // Clear the stored result
+                localStorage.removeItem('classificationResult');
+            } catch (error) {
+                console.error('Error processing result:', error);
+                document.getElementById('resultContainer').classList.add('hidden');
+                document.getElementById('errorContainer').classList.remove('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>

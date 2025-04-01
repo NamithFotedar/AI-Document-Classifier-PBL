@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Document Classifier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+
+<body class="bg-gray-100 min-h-screen flex flex-col">
+    <header class="bg-blue-600 text-white p-4 shadow-md">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-2xl font-bold">AI Document Classifier</h1>
+            <nav>
+                <ul class="flex space-x-4">
+                    <li><a href="index.html" class="hover:text-blue-200">Home</a></li>
+                    <li><a href="upload.html" class="hover:text-blue-200">Upload Document</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="container mx-auto flex-grow p-6">
+        <div class="bg-white shadow-md rounded-lg p-8 max-w-2xl mx-auto">
+            <h2 class="text-3xl font-bold mb-6 text-center text-blue-600">Welcome to Document AI Classifier</h2>
+
+            <div class="grid md:grid-cols-2 gap-6">
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">What We Do</h3>
+                    <p class="text-gray-700">
+                        Our AI-powered document classifier can automatically categorize your documents into various
+                        types such as legal, business, medical, sports, and entertainment.
+                    </p>
+                </div>
+
+                <div class="bg-blue-50 p-6 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">How It Works</h3>
+                    <ol class="list-decimal list-inside text-gray-700">
+                        <li>Upload your document</li>
+                        <li>Our AI analyzes the content</li>
+                        <li>Get instant classification results</li>
+                    </ol>
+                    <a href="upload.html"
+                        class="mt-4 inline-block bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+                        Start Classifying
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="bg-gray-800 text-white p-4 text-center">
+        <p>&copy; 2024 AI Document Classifier. All rights reserved.</p>
+    </footer>
+</body>
+
+</html>
